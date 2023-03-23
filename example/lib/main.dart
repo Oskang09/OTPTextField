@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
@@ -31,6 +32,16 @@ class _MyHomePageState extends State<MyHomePage> {
   OtpFieldController otpController = OtpFieldController();
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // send otp api trigger
+      otpController.setFocus(0);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -45,20 +56,33 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: OTPTextField(
-            controller: otpController,
-            length: 5,
-            width: MediaQuery.of(context).size.width,
-            textFieldAlignment: MainAxisAlignment.spaceAround,
-            fieldWidth: 45,
-            fieldStyle: FieldStyle.box,
-            outlineBorderRadius: 15,
-            style: TextStyle(fontSize: 17),
-            onChanged: (pin) {
-              print("Changed: " + pin);
-            },
-            onCompleted: (pin) {
-              print("Completed: " + pin);
-            }),
+          length: 6,
+          controller: otpController,
+          width: MediaQuery.of(context).size.width,
+          textFieldAlignment: MainAxisAlignment.spaceAround,
+          fieldWidth: 45,
+          obscureText: true,
+          obscuringCharacter: '*',
+          inputFormatter: [
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          outlineBorderRadius: 12,
+          otpFieldStyle: OtpFieldStyle(
+            backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+            valueBackgroundColor: const Color.fromRGBO(53, 227, 219, 1),
+            enabledBorderColor: const Color.fromRGBO(250, 250, 250, 1),
+            focusBorderColor: const Color.fromRGBO(53, 227, 219, 1),
+          ),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+            color: Colors.black,
+          ),
+          contentPadding: const EdgeInsets.all(8),
+          fieldStyle: FieldStyle.box,
+          onChanged: (value) {},
+          onCompleted: null,
+        ),
       ),
     );
   }
