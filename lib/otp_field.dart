@@ -67,6 +67,8 @@ class OTPTextField extends StatefulWidget {
 
   final String? obscuringCharacter;
 
+  final bool readOnly;
+
   const OTPTextField({
     Key? key,
     this.length = 4,
@@ -88,6 +90,7 @@ class OTPTextField extends StatefulWidget {
     this.inputFormatter,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
     this.isDense = false,
+    this.readOnly = false,
     this.onCompleted,
     this.obscuringCharacter,
   })  : assert(length > 1),
@@ -167,10 +170,6 @@ class _OTPTextFieldState extends State<OTPTextField> {
       currentPin.forEach((item) {
         newPin += item;
       });
-
-      if (!newPin.contains('') && newPin.length == widget.length) {
-        widget.onCompleted?.call(newPin);
-      }
 
       if (widget.onChanged != null) {
         widget.onChanged!(newPin);
@@ -268,6 +267,8 @@ class _OTPTextFieldState extends State<OTPTextField> {
           style: hasValue ? widget.valueStyle ?? widget.style : widget.style,
           inputFormatters: widget.inputFormatter,
           maxLength: 1,
+          showCursor: !widget.readOnly,
+          readOnly: widget.readOnly,
           focusNode: _focusNodes[index],
           obscureText: widget.obscureText,
           obscuringCharacter: widget.obscuringCharacter ?? '•',
