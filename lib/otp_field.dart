@@ -126,6 +126,27 @@ class _OTPTextFieldState extends State<OTPTextField> {
     });
   }
 
+  void clear() {
+    setState(() {
+      final textFieldLength = widget.length;
+      _pin = List.generate(textFieldLength, (int i) {
+        return '';
+      });
+
+      final textControllers = _textControllers;
+      textControllers.forEach((textController) {
+        if (textController != null) {
+          textController.text = '';
+        }
+      });
+
+      final firstFocusNode = _focusNodes[0];
+      if (firstFocusNode != null) {
+        firstFocusNode.requestFocus();
+      }
+    });
+  }
+
   @override
   void dispose() {
     _textControllers.forEach((controller) => controller?.dispose());
@@ -305,22 +326,7 @@ class OtpFieldController {
   }
 
   void clear() {
-    final textFieldLength = _otpTextFieldState.widget.length;
-    _otpTextFieldState._pin = List.generate(textFieldLength, (int i) {
-      return '';
-    });
-
-    final textControllers = _otpTextFieldState._textControllers;
-    textControllers.forEach((textController) {
-      if (textController != null) {
-        textController.text = '';
-      }
-    });
-
-    final firstFocusNode = _otpTextFieldState._focusNodes[0];
-    if (firstFocusNode != null) {
-      firstFocusNode.requestFocus();
-    }
+    _otpTextFieldState.clear();
   }
 
   void set(List<String> pin) {
